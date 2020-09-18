@@ -70,14 +70,12 @@ public class FlutterPdfActivity extends PdfActivity {
         return currentActivity;
     }
 
-    // public class CustomActivity extends PdfActivity {
-    //     @Override
-    //     public List<Integer> onGenerateMenuItemIds(@NonNull List<Integer> menuItems) {
-    //         // Take the default menu item IDs and remove the outlined items.
-    //         menuItems.remove(PdfActivity.disableAnnotationEditing());
-    
-    //         // Return the new order for the menu items.
-    //         return menuItems;
-    //     }
-    // }
+    @Override
+    public List<Integer> onGenerateMenuItemIds(@NonNull List<Integer> menuItems) {
+        // Take the default menu item IDs and remove the outlined items.
+        menuItems.remove(disableOutline());
+
+        // Return the new order for the menu items.
+        return menuItems;
+    }
 }
