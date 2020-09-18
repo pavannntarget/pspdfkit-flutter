@@ -29,12 +29,14 @@ public class FlutterPdfActivity extends PdfActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         print('onCreate teste');
+        Log.i("TESTE", "this is a teste");
         bindActivity();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i("TESTE", "this is a teste");
         releaseActivity();
     }
 
