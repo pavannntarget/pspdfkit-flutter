@@ -17,66 +17,73 @@ import io.flutter.plugin.common.MethodChannel.Result;
  */
 public class FlutterPdfActivity extends PdfActivity {
 
-    // private static FlutterPdfActivity currentActivity;
-    // private static AtomicReference<Result> loadedDocumentResult = new AtomicReference<>();
+    private static FlutterPdfActivity currentActivity;
+    private static AtomicReference<Result> loadedDocumentResult = new AtomicReference<>();
 
-    // public static void setLoadedDocumentResult(Result result) {
-    //     loadedDocumentResult.set(result);
-    // }
+    public static void setLoadedDocumentResult(Result result) {
+        print('teste 1');
+        loadedDocumentResult.set(result);
+    }
 
-    // @Override
-    // protected void onCreate(Bundle bundle) {
-    //     super.onCreate(bundle);
-    //     bindActivity();
-    // }
+    @Override
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        bindActivity();
+    }
 
-    // @Override
-    // protected void onDestroy() {
-    //     super.onDestroy();
-    //     releaseActivity();
-    // }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        releaseActivity();
+    }
 
-    // @Override
-    // public void onDocumentLoaded(@NonNull PdfDocument pdfDocument) {
-    //     super.onDocumentLoaded(pdfDocument);
-    //     Result result = loadedDocumentResult.getAndSet(null);
-    //     if (result != null) {
-    //         result.success(true);
-    //     }
-    // }
+    @Override
+    public void onDocumentLoaded(@NonNull PdfDocument pdfDocument) {
+        super.onDocumentLoaded(pdfDocument);
+        Result result = loadedDocumentResult.getAndSet(null);
+        if (result != null) {
+            result.success(true);
+        print('teste 2');
 
-    // @Override
-    // public void onDocumentLoadFailed(@NonNull Throwable throwable) {
-    //     super.onDocumentLoadFailed(throwable);
-    //     Result result = loadedDocumentResult.getAndSet(null);
-    //     if (result != null) {
-    //         result.success(false);
-    //     }
-    // }
+        }
+    }
 
-    // private void bindActivity() {
-    //     currentActivity = this;
-    // }
+    @Override
+    public void onDocumentLoadFailed(@NonNull Throwable throwable) {
+        super.onDocumentLoadFailed(throwable);
+        Result result = loadedDocumentResult.getAndSet(null);
+        if (result != null) {
+            result.success(false);
+        print('teste 3');
 
-    // private void releaseActivity() {
-    //     Result result = loadedDocumentResult.getAndSet(null);
-    //     if (result != null) {
-    //         result.success(false);
-    //     }
-    //     currentActivity = null;
-    // }
+        }
+    }
 
-    // public static FlutterPdfActivity getCurrentActivity() {
-    //     return currentActivity;
-    // }
+    private void bindActivity() {
+        currentActivity = this;
+    }
 
-    // @Override
-    // public List<Integer> onGenerateMenuItemIds(@NonNull List<Integer> menuItems) {
-    //     // Take the default menu item IDs and remove the outlined items.
-    //     menuItems.remove(disableSearch());
-    //     disableSearch()
+    private void releaseActivity() {
+        Result result = loadedDocumentResult.getAndSet(null);
+        if (result != null) {
+            result.success(false);
+        }
+        currentActivity = null;
+    }
 
-    //     // Return the new order for the menu items.
-    //     return menuItems;
-    // }
+    public static FlutterPdfActivity getCurrentActivity() {
+        return currentActivity;
+    }
+
+    @Override
+    public List<Integer> onGenerateMenuItemIds(@NonNull List<Integer> menuItems) {
+        // Take the default menu item IDs and remove the outlined items.
+        menuItems.remove(disableSearch());
+        disableSearch()
+        print('teste 4');
+        
+
+        // Return the new order for the menu items.
+        return menuItems;
+    }
 }
