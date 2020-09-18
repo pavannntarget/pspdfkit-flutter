@@ -28,6 +28,7 @@ public class FlutterPdfActivity extends PdfActivity {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        print('onCreate teste');
         bindActivity();
     }
 
