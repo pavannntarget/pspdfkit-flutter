@@ -11,8 +11,39 @@
 @import PSPDFKit;
 @import PSPDFKitUI;
 
+@interface CustomPSPDFViewController: PSPDFViewController @end
+@implementation CustomPSPDFViewController
+
+- (UIBarButtonItem *)activityButtonItem {
+    UIBarButtonItem *activityButton = super.activityButtonItem;
+    activityButton.target = self;
+    activityButton.action = @selector(share:);
+    return activityButton;
+}
+
+- (void)share:(id)sender {
+    PSPDFProcessorConfiguration *config = [[PSPDFProcessorConfiguration alloc] initWithDocument:self.document];
+    PSPDFDocumentSecurityOptions *security = [[PSPDFDocumentSecurityOptions alloc] initWithOwnerPassword:nil userPassword:nil error:NULL];
+    PSPDFProcessor *processor = [[PSPDFProcessor alloc] initWithConfiguration:config securityOptions:security];
+
+    NSData *data = [processor dataWithError:NULL];
+
+    PSPDFDocument *nonProtectedDocument = [[PSPDFDocument alloc] initWithDataProviders:@[[[PSPDFDataContainerProvider alloc] initWithData:data]]];
+
+    PSPDFDocumentSharingConfiguration *sharingConfig = [PSPDFDocumentSharingConfiguration configurationWithBuilder:^(PSPDFDocumentSharingConfigurationBuilder *sharingConfigBuilder) {
+        sharingConfigBuilder.destination = PSPDFDocumentSharingDestinationActivity;
+        sharingConfigBuilder.annotationOptions = PSPDFDocumentSharingAnnotationOptionEmbed;
+    }];
+
+    PSPDFDocumentSharingViewController *shareViewController = [[PSPDFDocumentSharingViewController alloc] initWithDocuments:@[nonProtectedDocument] sharingConfigurations:@[sharingConfig]];
+
+    [shareViewController presentFromViewController:self sender:sender];
+}
+
+@end
+
 @interface PspdfkitPlugin()
-@property (nonatomic) PSPDFViewController *pdfViewController;
+@property (nonatomic) CustomPSPDFViewController *pdfViewController;
 @end
 
 @implementation PspdfkitPlugin
@@ -85,7 +116,7 @@
         PSPDFDocument *document = [self document:documentPath];
         [self unlockWithPasswordIfNeeded:document dictionary:configurationDictionary];
         PSPDFConfiguration *psPdfConfiguration = [self configuration:configurationDictionary isImageDocument:[self isImageDocument:documentPath]];
-        self.pdfViewController = [[PSPDFViewController alloc] initWithDocument:document configuration:psPdfConfiguration];
+        self.pdfViewController = [[CustomPSPDFViewController alloc] initWithDocument:document configuration:psPdfConfiguration];
         self.pdfViewController.appearanceModeManager.appearanceMode = [self appearanceMode:configurationDictionary];
         self.pdfViewController.pageIndex = [self pageIndex:configurationDictionary];
         
@@ -460,4 +491,3 @@
 }
 
 @end
-
